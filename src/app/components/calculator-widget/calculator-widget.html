@@ -1,0 +1,57 @@
+<section class="calculator-section">
+  <h2 class="section-title">Free Preview</h2>
+  <p class="section-subtitle">Experience basic arithmetic — no quantum subscription required</p>
+  <p class="keyboard-hint">
+    <i-lucide [img]="icons['keyboard']" [size]="14"></i-lucide>
+    Keyboard support enabled
+  </p>
+  <div class="calculator-area">
+    <div class="calculator-wrapper">
+      <div class="calculator" [class.glitch]="divideByZeroGlitch()">
+        <div class="calculator-display">
+          <div class="display-top-row">
+            @if (lastExpression()) {
+              <div class="display-expression">{{ lastExpression() }}</div>
+            }
+            <button class="display-backspace" (click)="backspace()">⌫</button>
+          </div>
+          <div class="display-value" [class.small-text]="displayFormatted().length > 12">
+            {{ displayFormatted() }}
+          </div>
+          @if (easterEgg()) {
+            <div class="easter-egg">{{ easterEgg() }}</div>
+          }
+        </div>
+        <div class="calculator-buttons">
+          @for (btn of buttons; track $index) {
+            <button
+              class="calc-btn"
+              [class.digit]="btn.type === 'digit' || btn.type === 'digit zero'"
+              [class.operator]="btn.type === 'operator'"
+              [class.equals]="btn.type === 'equals'"
+              [class.function]="btn.type === 'function'"
+              [class.zero]="btn.type === 'digit zero'"
+              (click)="btn.action()">
+              {{ btn.label }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    @if (history().length) {
+      <div class="history-tape">
+        <div class="tape-header">
+          <i-lucide [img]="icons['clock']" [size]="14"></i-lucide>
+          History
+        </div>
+        @for (entry of history(); track $index) {
+          <div class="tape-entry">
+            <span class="tape-expr">{{ entry.expression }}</span>
+            <span class="tape-result">= {{ entry.result }}</span>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>

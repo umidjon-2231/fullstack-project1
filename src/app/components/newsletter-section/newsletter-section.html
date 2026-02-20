@@ -1,0 +1,22 @@
+<section class="newsletter">
+  <div class="newsletter-inner">
+    <i-lucide [img]="icons['mail']" [size]="32" class="newsletter-icon"></i-lucide>
+    @if (!submitted()) {
+      <h2 class="newsletter-title">Stay in the Loop</h2>
+      <p class="newsletter-subtitle">Get quantum updates delivered to your inbox (and 3 parallel dimensions)</p>
+      <div class="newsletter-form">
+        <input
+          type="email"
+          placeholder="your&#64;email.com"
+          class="newsletter-input"
+          [value]="email()"
+          (input)="email.set($any($event.target).value)"
+          (keydown.enter)="submit()" />
+        <button class="newsletter-btn" (click)="submit()">Subscribe</button>
+      </div>
+    } @else {
+      <h2 class="newsletter-title">You're In!</h2>
+      <p class="newsletter-subtitle">Your subscription has been quantum-entangled across all dimensions. You may receive emails before we send them.</p>
+    }
+  </div>
+</section>

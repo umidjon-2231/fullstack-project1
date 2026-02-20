@@ -1,0 +1,19 @@
+<section class="faq">
+  <h2 class="section-title">Frequently Asked Questions</h2>
+  <p class="section-subtitle">The answers you didn't know you needed</p>
+  <div class="faq-list">
+    @for (item of faqs; track item.question; let i = $index) {
+      <div class="faq-item" [class.open]="faqOpen() === i">
+        <button class="faq-question" (click)="toggleFaq(i)">
+          <span>{{ item.question }}</span>
+          <i-lucide [img]="icons['chevron-down']" [size]="20" class="faq-chevron"></i-lucide>
+        </button>
+        @if (faqOpen() === i) {
+          <div class="faq-answer">
+            <p>{{ item.answer }}</p>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>

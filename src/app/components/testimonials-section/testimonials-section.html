@@ -1,0 +1,24 @@
+<section class="testimonials">
+  <h2 class="section-title">What People Are Saying</h2>
+  <p class="section-subtitle">Real* reviews from real* humans (*unverified)</p>
+  <div class="testimonials-grid">
+    @for (testimonial of testimonials; track testimonial.author) {
+      <div class="testimonial-card">
+        <i-lucide [img]="icons['quote']" [size]="24" class="testimonial-quote-icon"></i-lucide>
+        <p class="testimonial-text">{{ testimonial.quote }}</p>
+        <div class="testimonial-stars">
+          @for (s of starRange; track s) {
+            <i-lucide [img]="icons['star']" [size]="14" [class.filled]="s <= testimonial.stars"></i-lucide>
+          }
+        </div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">{{ testimonial.author[0] }}</div>
+          <div>
+            <p class="testimonial-name">{{ testimonial.author }}</p>
+            <p class="testimonial-role">{{ testimonial.role }}</p>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>

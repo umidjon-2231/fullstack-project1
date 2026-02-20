@@ -1,0 +1,11 @@
+<section class="stats-bar" #statsRef>
+  <div class="stats-row">
+    @for (stat of stats; track stat.label; let i = $index) {
+      <div class="stat-item" [class.counted]="statsStarted()">
+        <i-lucide [img]="icons[stat.icon]" [size]="20"></i-lucide>
+        <span class="stat-value">{{ statDisplayValues()[i] }}</span>
+        <span class="stat-label">{{ stat.label }}</span>
+      </div>
+    }
+  </div>
+</section>

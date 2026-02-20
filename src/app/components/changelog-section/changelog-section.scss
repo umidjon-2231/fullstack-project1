@@ -1,0 +1,39 @@
+:host { display: block; }
+
+.changelog {
+  padding: 6rem 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.changelog-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.changelog-entry {
+  display: flex;
+  gap: 1.25rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  align-items: baseline;
+}
+
+.changelog-version {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--neon-magenta);
+  min-width: 60px;
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+}
+
+.changelog-note {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .changelog { padding: 4rem 1.5rem; }
+}

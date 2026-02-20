@@ -1,0 +1,12 @@
+<section class="changelog">
+  <h2 class="section-title">Changelog</h2>
+  <p class="section-subtitle">A brief history of numerical triumph</p>
+  <div class="changelog-list">
+    @for (entry of changelog; track entry.version) {
+      <div class="changelog-entry">
+        <span class="changelog-version">{{ entry.version }}</span>
+        <span class="changelog-note">{{ entry.note }}</span>
+      </div>
+    }
+  </div>
+</section>

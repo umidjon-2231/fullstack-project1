@@ -1,0 +1,15 @@
+<section class="features">
+  <h2 class="section-title">Revolutionary Technology</h2>
+  <p class="section-subtitle">Powered by innovations that don't exist yet</p>
+  <div class="features-grid">
+    @for (feature of features; track feature.title) {
+      <div class="feature-card">
+        <div class="feature-icon-wrap">
+          <i-lucide [img]="icons[feature.icon]" [size]="32"></i-lucide>
+        </div>
+        <h3 class="feature-title">{{ feature.title }}</h3>
+        <p class="feature-description">{{ feature.description }}</p>
+      </div>
+    }
+  </div>
+</section>

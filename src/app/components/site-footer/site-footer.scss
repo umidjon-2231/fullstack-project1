@@ -1,0 +1,29 @@
+:host { display: block; }
+
+.footer {
+  border-top: 1px solid rgba(0,255,242,0.1);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.footer-copyright {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.footer-disclaimer {
+  font-size: 0.75rem;
+  color: rgba(255,170,0,0.6);
+  max-width: 500px;
+  margin: 0 auto 1rem;
+  line-height: 1.6;
+}
+
+.footer-konami {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  opacity: 0.3;
+  font-style: italic;
+}

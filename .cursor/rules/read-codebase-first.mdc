@@ -1,0 +1,19 @@
+---
+description: Read CODEBASE.md before executing any task in this project
+alwaysApply: true
+---
+
+# Read CODEBASE.md First
+
+Before executing **any** task in this project, read `CODEBASE.md` at the workspace root.
+
+It documents:
+- Project overview and what every section does
+- Angular 21 patterns in use (standalone components, Signals, `output()`, `viewChild()`, `inject()`, `@for`/`@if`)
+- Design system — CSS variables, fonts, shared classes (`.section-title`, `.reveal`, etc.)
+- Component catalog with responsibilities and key implementation details
+- Naming conventions for files, classes, selectors, signals, outputs
+- Step-by-step guides for adding new sections, icons, state, timers, and pages
+- Special features: scroll-reveal wiring, Konami code, confetti flow, easter eggs
+
+Skipping this file risks violating established patterns.

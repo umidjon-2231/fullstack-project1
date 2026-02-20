@@ -1,0 +1,11 @@
+<section class="awards">
+  <div class="awards-track">
+    @for (award of awards; track award.title) {
+      <div class="award-badge">
+        <i-lucide [img]="icons['trophy']" [size]="16"></i-lucide>
+        <span class="award-title">{{ award.title }}</span>
+        <span class="award-org">&mdash; {{ award.org }}</span>
+      </div>
+    }
+  </div>
+</section>

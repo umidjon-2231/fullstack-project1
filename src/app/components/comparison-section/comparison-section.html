@@ -1,0 +1,33 @@
+<section class="comparison">
+  <h2 class="section-title">How We Compare</h2>
+  <p class="section-subtitle">Spoiler: there is no comparison</p>
+  <div class="comparison-wrapper">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          @for (header of headers; track header) {
+            <th [class.highlight]="header === 'CALCUL8R'">{{ header }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows; track row.feature) {
+          <tr>
+            <td class="feature-label">{{ row.feature }}</td>
+            @for (val of row.values; track $index) {
+              <td [class.highlight]="$index === 0">
+                @if (val === 'check') {
+                  <i-lucide [img]="icons['check']" [size]="18" class="icon-check"></i-lucide>
+                } @else if (val === 'x') {
+                  <i-lucide [img]="icons['x']" [size]="18" class="icon-x"></i-lucide>
+                } @else {
+                  {{ val }}
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

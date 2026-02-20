@@ -1,0 +1,37 @@
+:host { display: block; }
+
+.press-bar {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.press-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  opacity: 0.6;
+}
+
+.press-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem 3rem;
+}
+
+.press-logo {
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  color: var(--text-muted);
+  opacity: 0.35;
+  letter-spacing: 0.05em;
+  transition: opacity 0.3s;
+
+  &:hover { opacity: 0.7; }
+}
+
+@media (max-width: 768px) {
+  .press-bar { padding: 4rem 1.5rem; }
+}

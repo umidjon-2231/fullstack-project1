@@ -1,0 +1,20 @@
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="particles">
+    @for (p of particles; track p) {
+      <div class="particle"></div>
+    }
+  </div>
+  <div class="hero-content">
+    <p class="hero-pretext">INITIALIZING NUMERIC INTERFACE v1.0...</p>
+    <h1 class="hero-title">
+      CALCUL<span class="eight">8</span>R
+    </h1>
+    <p class="hero-tagline">The future of counting is here</p>
+    <p class="hero-subtitle">After 7 years of R&amp;D, $4.2 billion in funding, and 12 failed prototypes — we are proud to unveil the world's first device capable of combining two numbers.</p>
+    <button class="hero-cta" (click)="scrollToCalculator()">
+      <span>TRY FREE PREVIEW</span>
+      <span class="cta-arrow">↓</span>
+    </button>
+  </div>
+</section>

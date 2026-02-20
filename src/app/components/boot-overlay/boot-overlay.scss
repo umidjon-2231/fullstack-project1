@@ -1,0 +1,50 @@
+@keyframes boot-fade {
+  to { opacity: 0; pointer-events: none; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.boot-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: boot-fade 0.6s ease 3.6s forwards;
+}
+
+.boot-terminal {
+  max-width: 600px;
+  width: 90%;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.boot-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--neon-cyan);
+  margin-bottom: 1.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+}
+
+.boot-line {
+  color: var(--neon-green);
+  margin-bottom: 0.3rem;
+  animation: float-up 0.2s ease-out;
+
+  &.warn { color: var(--neon-amber); }
+}
+
+.boot-cursor {
+  color: var(--neon-green);
+  animation: blink 0.8s step-end infinite;
+}

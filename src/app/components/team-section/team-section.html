@@ -1,0 +1,13 @@
+<section class="team">
+  <h2 class="section-title">Meet the Team</h2>
+  <p class="section-subtitle">The finest minds in numerical science</p>
+  <div class="team-grid">
+    @for (member of team; track member.name) {
+      <div class="team-card">
+        <div class="team-avatar" [class]="'avatar-' + member.color">{{ member.initial }}</div>
+        <h3 class="team-name">{{ member.name }}</h3>
+        <p class="team-title">{{ member.title }}</p>
+      </div>
+    }
+  </div>
+</section>

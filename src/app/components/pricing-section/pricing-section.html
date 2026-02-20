@@ -1,0 +1,27 @@
+<section class="pricing">
+  <h2 class="section-title">Choose Your Plan</h2>
+  <p class="section-subtitle">All plans billed monthly. No refunds. No questions answered.</p>
+  <div class="pricing-grid">
+    @for (tier of pricing; track tier.name) {
+      <div class="pricing-card" [class]="'tier-' + tier.color" [class.popular]="tier.popular">
+        @if (tier.popular) {
+          <div class="popular-badge">MOST POPULAR</div>
+        }
+        <h3 class="tier-name">{{ tier.name }}</h3>
+        <div class="tier-price">
+          <span class="price-amount">{{ tier.price }}</span>
+          <span class="price-period">/month</span>
+        </div>
+        <ul class="tier-features">
+          @for (feature of tier.features; track feature) {
+            <li>
+              <i-lucide [img]="icons['check']" [size]="14" class="tier-check"></i-lucide>
+              {{ feature }}
+            </li>
+          }
+        </ul>
+        <button class="tier-cta">Get {{ tier.name }}</button>
+      </div>
+    }
+  </div>
+</section>

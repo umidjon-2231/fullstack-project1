@@ -1,0 +1,14 @@
+@if (showBoot()) {
+  <div class="boot-overlay">
+    <div class="boot-terminal">
+      <div class="boot-header">
+        <i-lucide [img]="icons['terminal']" [size]="16"></i-lucide>
+        <span>CALCUL8R QUANTUM BIOS v1.0</span>
+      </div>
+      @for (line of bootLines(); track $index) {
+        <p class="boot-line" [class.warn]="line.includes('[WARN]')">{{ line }}</p>
+      }
+      <span class="boot-cursor">_</span>
+    </div>
+  </div>
+}
