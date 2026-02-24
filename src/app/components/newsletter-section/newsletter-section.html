@@ -1,22 +1,67 @@
 <section class="newsletter">
-  <div class="newsletter-inner">
+  <div class="newsletter-inner"
+       [class.apocalypse-shake]="apocalypseActive()"
+       [class.consent-shake]="consentErrorActive()">
     <i-lucide [img]="icons['mail']" [size]="32" class="newsletter-icon"></i-lucide>
     @if (!submitted()) {
       <h2 class="newsletter-title">Stay in the Loop</h2>
       <p class="newsletter-subtitle">Get quantum updates delivered to your inbox (and 3 parallel dimensions)</p>
-      <div class="newsletter-form">
-        <input
-          type="email"
-          placeholder="your&#64;email.com"
-          class="newsletter-input"
-          [value]="email()"
-          (input)="email.set($any($event.target).value)"
-          (keydown.enter)="submit()" />
-        <button class="newsletter-btn" (click)="submit()">Subscribe</button>
-      </div>
+
+      @if (!isSubmitting()) {
+        <div class="newsletter-form" [class.form-invalid]="apocalypseActive()">
+          <input
+            #emailInput
+            type="text"
+            placeholder="your&#64;email.com"
+            class="newsletter-input"
+            [class.input-invalid]="apocalypseEvent()"
+            (input)="hasEmailContent.set($any($event.target).value.length > 0)"
+            (keydown.enter)="submit()" />
+          <button class="newsletter-btn"
+                  [disabled]="!btnEnabled()"
+                  [class.btn-ready]="btnEnabled() && consentChecked()"
+                  (click)="submit()">Subscribe</button>
+        </div>
+
+        <label class="consent-row" [class.consent-row-error]="consentErrorActive()">
+          <input type="checkbox"
+                 class="consent-checkbox"
+                 [checked]="consentChecked()"
+                 (change)="consentChecked.set($any($event.target).checked)" />
+          <span class="consent-text">
+            I consent to receiving emails across all known dimensions
+            <span class="consent-required">(mandatory)</span>
+          </span>
+        </label>
+
+        @if (consentErrorMsg()) {
+          <p class="consent-error-msg">⚠ {{ consentErrorMsg() }}</p>
+        }
+
+        @if (apocalypseEvent()) {
+          <div class="apocalypse-panel" [class.apocalypse-glitch]="apocalypseActive()">
+            <div class="apocalypse-header">
+              <span class="apocalypse-icon">☢</span>
+              <span class="apocalypse-headline">{{ apocalypseEvent()!.headline }}</span>
+            </div>
+            <p class="apocalypse-detail">{{ apocalypseEvent()!.detail }}</p>
+            <p class="apocalypse-casualty">{{ apocalypseEvent()!.casualty }}</p>
+            <p class="apocalypse-fix">Enter a valid email to prevent further dimensional damage.</p>
+          </div>
+        }
+      } @else {
+        <div class="phase-wrap">
+          <p class="phase-label">{{ phaseLabel() }}</p>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" [style.width.%]="progressPercent()"></div>
+          </div>
+          <p class="progress-pct">{{ progressPercent() }}%</p>
+        </div>
+      }
     } @else {
       <h2 class="newsletter-title">You're In!</h2>
       <p class="newsletter-subtitle">Your subscription has been quantum-entangled across all dimensions. You may receive emails before we send them.</p>
+      <div class="success-badge">ENTANGLEMENT CONFIRMED ✦</div>
     }
   </div>
 </section>

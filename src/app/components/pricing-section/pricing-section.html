@@ -3,9 +3,14 @@
   <p class="section-subtitle">All plans billed monthly. No refunds. No questions answered.</p>
   <div class="pricing-grid">
     @for (tier of pricing; track tier.name) {
-      <div class="pricing-card" [class]="'tier-' + tier.color" [class.popular]="tier.popular">
+      <div class="pricing-card" [class]="'tier-' + tier.color"
+           [class.popular]="tier.popular"
+           [class.tier-active]="getChip(tier.key)">
         @if (tier.popular) {
           <div class="popular-badge">MOST POPULAR</div>
+        }
+        @if (getChip(tier.key)) {
+          <div class="status-chip" [class]="'chip-' + tier.color">{{ getChip(tier.key) }}</div>
         }
         <h3 class="tier-name">{{ tier.name }}</h3>
         <div class="tier-price">
@@ -20,8 +25,313 @@
             </li>
           }
         </ul>
-        <button class="tier-cta">Get {{ tier.name }}</button>
+        <button class="tier-cta" [class.cta-active]="getChip(tier.key)" (click)="openModal(tier.key)">
+          @if (getChip(tier.key)) { {{ getChip(tier.key) }} } @else { Get {{ tier.name }} }
+        </button>
       </div>
     }
   </div>
 </section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     MODAL
+══════════════════════════════════════════════════════════════════════ -->
+@if (modalTier()) {
+  <div class="modal-backdrop" (click)="onBackdropClick($event)">
+    <div class="modal" [class]="'modal-' + getTier(modalTier()!).color">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-tier-label">{{ getTier(modalTier()!).name }}</span>
+          <span class="modal-price">{{ getTier(modalTier()!).price }}<span class="modal-price-period">/mo</span></span>
+        </div>
+        <button class="modal-close" (click)="closeModal()" [disabled]="isAdWatching" [class.close-locked]="isAdWatching">
+          <i-lucide [img]="icons['x']" [size]="18" />
+        </button>
+      </div>
+
+      <!-- ── BASIC: Qualification Quiz ───────────────────────────────────── -->
+      @if (modalTier() === 'basic') {
+
+        @if (getFlow('basic') === 'quiz') {
+          <div class="modal-body">
+            <p class="modal-intro">Complete the qualification assessment to secure your place in the queue.</p>
+            @for (q of questions; track q.question; let qi = $index) {
+              <div class="quiz-question">
+                <p class="q-text"><span class="q-num">{{ qi + 1 }}</span>{{ q.question }}</p>
+                <div class="q-options">
+                  @for (opt of q.options; track opt; let oi = $index) {
+                    <button class="q-option" [class.selected]="selectedAnswers()[qi] === oi"
+                            (click)="selectAnswer(qi, oi)">{{ opt }}</button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          <div class="modal-footer">
+            <button class="modal-action modal-action-cyan" [disabled]="!allAnswered()" (click)="submitQuiz()">
+              SUBMIT FOR EVALUATION
+            </button>
+          </div>
+        }
+
+        @if (getFlow('basic') === 'approved') {
+          <div class="modal-body result-center">
+            <p class="result-title result-pass">QUALIFIED ✓</p>
+            <p class="result-body">Your rationality levels are acceptably low. Welcome.</p>
+            <p class="queue-number">{{ queueNumber() }}</p>
+            <p class="queue-label">YOUR POSITION IN QUEUE</p>
+            <p class="result-note">Estimated wait: 4–7 business decades</p>
+          </div>
+          <div class="modal-footer">
+            <button class="modal-action modal-action-ghost" (click)="closeModal()">CLOSE</button>
+          </div>
+        }
+
+        @if (getFlow('basic') === 'fail-menu') {
+          <div class="modal-body result-center">
+            <p class="result-title result-fail">DISQUALIFIED ✗</p>
+            <p class="result-reason">{{ quizFailReason() }}</p>
+            <p class="result-body">You answered too sensibly. This is a safe space for chaos. Two paths remain.</p>
+            <div class="fail-options">
+              <button class="fail-option-card fail-option-worthy" (click)="startWorthyWait()">
+                <span class="fail-opt-title">AWAIT WORTHINESS</span>
+                <span class="fail-opt-desc">Sit in the void until the dimensions deem you ready. No guarantee of success.</span>
+                <span class="fail-opt-cost">Cost: Dignity (non-refundable)</span>
+              </button>
+              <button class="fail-option-card fail-option-ad" (click)="startWatchingAd()">
+                <span class="fail-opt-title">WATCH AN AD</span>
+                <span class="fail-opt-desc">Skip the wait. Sit through our sponsor message. Terms apply across 7 dimensions.</span>
+                <span class="fail-opt-cost">Cost: Your time (also non-refundable)</span>
+              </button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="modal-action modal-action-magenta" (click)="closeModal(); openModal('pro')">ESCAPE TO PRO TIER INSTEAD</button>
+          </div>
+        }
+
+        @if (getFlow('basic') === 'ad-watching') {
+          <div class="modal-body ad-body">
+            <div class="ad-warning-bar">
+              ⚠ SKIPPING THIS AD IS PROHIBITED UNDER INTERGALACTIC COMMERCIAL CODE §47-B AND VIOLATES YOUR TERMS OF SERVICE IN DIMENSIONS 3 THROUGH 9
+            </div>
+            <div class="ad-player">
+              <div class="ad-content-area">
+                <p class="ad-brand">{{ currentAd().brand }}</p>
+                <p class="ad-title">{{ currentAd().title }}</p>
+                <p class="ad-tagline">{{ currentAd().tagline }}</p>
+              </div>
+              <div class="ad-meta-row">
+                <span class="ad-counter">Ad {{ adNumber() }} of 847</span>
+                <span class="ad-dimension-note">Playing in dimension {{ (adNumber() % 9) + 1 }}</span>
+              </div>
+              <div class="ad-controls">
+                <div class="ad-progress-track">
+                  <div class="ad-progress-fill"></div>
+                </div>
+                <div class="ad-bottom-row">
+                  <span class="ad-time-remaining">{{ adSkipSeconds() | number }} seconds of existence consumed</span>
+                  <button class="ad-skip-btn"
+                          [class.skip-hovered]="adSkipHovered()"
+                          (mouseenter)="onSkipHover(true)"
+                          (mouseleave)="onSkipHover(false)">
+                    @if (adSkipHovered()) {
+                      NO.
+                    } @else {
+                      SKIP AD IN {{ adSkipSeconds() | number }}s
+                    }
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="ad-legal">
+              By watching this ad you consent to receive targeted advertisements across all known timelines, acknowledge that your attention data may be sold to entities in dimensions 4, 6, and 8, and waive all claims related to lost time, existential dread, or spontaneous dimension-shifting.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <p class="ad-footer-note">⛔ Escape is disabled. Closing this modal resets your dimensional credit score and voids your application across all timelines.</p>
+          </div>
+        }
+
+        @if (getFlow('basic') === 'worthy-wait') {
+          <div class="modal-body result-center worthy-body">
+            <p class="worthy-title">RECALIBRATING YOUR WORTHINESS</p>
+            @if (!worthyDone()) {
+              <div class="worthy-countdown-wrap">
+                <p class="worthy-number">{{ worthySecondsLeft() }}</p>
+                <p class="worthy-label-text">{{ worthyLabel() }} REMAINING</p>
+              </div>
+              <p class="worthy-shame">{{ worthyShameMsg() }}</p>
+              <p class="worthy-note">Time compression courtesy of CALCUL8R Enterprise™.<br>Your wait is being processed across {{ worthySecondsLeft() * 3 + 1 }} parallel dimensions.</p>
+            } @else {
+              <p class="worthy-done-title">RECALIBRATION COMPLETE</p>
+              <p class="result-body">The dimensions have reconsidered. You may now attempt re-entry.<br>Do not waste this second chance. The void is watching.</p>
+            }
+          </div>
+          <div class="modal-footer">
+            @if (worthyDone()) {
+              <button class="modal-action modal-action-cyan" (click)="retakeQuiz()">ATTEMPT RE-ENTRY</button>
+            } @else {
+              <p class="ad-footer-note">Please remain seated. Dimension 6 is still processing your shame.</p>
+            }
+          </div>
+        }
+
+      }
+
+      <!-- ── PRO: Aura Verification Form ───────────────────────────────── -->
+      @if (modalTier() === 'pro') {
+
+        @if (getFlow('pro') === 'pro-form') {
+          <div class="modal-body">
+            <p class="modal-intro">Complete the Aura Verification Form to begin your approval process.</p>
+            @for (q of proQuestions; track q.id; let qi = $index) {
+              <div class="pro-question">
+                <p class="q-text"><span class="q-num">{{ qi + 1 }}</span>{{ q.question }}</p>
+                <div class="pro-options">
+                  @for (opt of q.options; track opt.label; let oi = $index) {
+                    <button class="pro-option"
+                            [class.selected]="proAnswers()[q.id] === oi"
+                            [class]="'pro-option' + (proAnswers()[q.id] === oi ? ' selected' : '') + (opt.color ? ' opt-' + opt.color : '')"
+                            (click)="selectProAnswer(q.id, oi)">
+                      <span class="pro-opt-label">{{ opt.label }}</span>
+                      @if (opt.sub) { <span class="pro-opt-sub">{{ opt.sub }}</span> }
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          <div class="modal-footer">
+            <button class="modal-action modal-action-magenta" [disabled]="!proAllAnswered()" (click)="submitProForm()">
+              SUBMIT AURA FOR REVIEW
+            </button>
+          </div>
+        }
+
+        @if (getFlow('pro') === 'processing') {
+          <div class="modal-body result-center">
+            <div class="processing-dots"><span></span><span></span><span></span></div>
+            <p class="processing-label">{{ processingLabel() }}</p>
+          </div>
+        }
+
+        @if (getFlow('pro') === 'approved') {
+          <div class="modal-body result-center">
+            <p class="result-title result-pass">APPROVED ✓</p>
+            @if (proOutcomeKey() === 'APPROVED_UPSELL') {
+              <p class="result-body">Your aura tested positive for productivity. You're in.<br>However — have you considered Enterprise? Greg is very good at his job.</p>
+              <p class="upsell-nudge">↓ Enterprise is right there ↓</p>
+            } @else {
+              <p class="result-body">Your aura tested positive for productivity. Welcome to the Pro tier. Dark mode has been enabled in 3 dimensions.</p>
+            }
+          </div>
+          <div class="modal-footer modal-footer-split">
+            <button class="modal-action modal-action-ghost" (click)="retryPro()">RE-EVALUATE</button>
+            <button class="modal-action modal-action-magenta" (click)="closeModal()">ACCEPT APPROVAL</button>
+          </div>
+        }
+
+        @if (getFlow('pro') === 'pending') {
+          <div class="modal-body result-center">
+            <p class="result-title result-pending">PENDING ⏳</p>
+            <p class="result-body">Awaiting manager's quantum signature. Your application has been forwarded to 3 parallel dimensions for review.</p>
+            <p class="result-note">Estimated approval: Next fiscal quarter, or never — whichever comes first.</p>
+          </div>
+          <div class="modal-footer modal-footer-split">
+            <button class="modal-action modal-action-ghost" (click)="retryPro()">ESCALATE</button>
+            <button class="modal-action modal-action-ghost" (click)="closeModal()">WAIT PATIENTLY</button>
+          </div>
+        }
+
+      }
+
+      <!-- ── ENTERPRISE: Board Resolution Form ─────────────────────────── -->
+      @if (modalTier() === 'enterprise') {
+
+        @if (getFlow('enterprise') === 'enterprise-form') {
+          <div class="modal-body">
+            <p class="modal-intro">Complete the Board Resolution Form. All fields are mandatory. Some fields are unknowable.</p>
+
+            <div class="ent-field">
+              <label class="ent-label">Company legal name (this dimension only)</label>
+              <input class="ent-input" type="text" placeholder="MegaCorp™ International Ltd. Inc."
+                     [value]="companyName()"
+                     (input)="companyName.set($any($event.target).value)" />
+            </div>
+
+            <div class="ent-field">
+              <label class="ent-label">Team size — including contractors, interns, and sentient AIs</label>
+              <div class="ent-options">
+                @for (opt of enterpriseTeamOptions; track opt.label; let oi = $index) {
+                  <button class="ent-option" [class.selected]="enterpriseTeam() === oi"
+                          (click)="enterpriseTeam.set(oi)">
+                    <span class="ent-opt-label">{{ opt.label }}</span>
+                    <span class="ent-opt-sub">{{ opt.sub }}</span>
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div class="ent-field">
+              <label class="ent-label">Primary use cases — select all that apply</label>
+              <div class="ent-checks">
+                @for (item of enterpriseUseCases; track item; let ci = $index) {
+                  <label class="ent-check-row">
+                    <input type="checkbox" class="ent-checkbox"
+                           [checked]="enterpriseChecked()[ci]"
+                           (change)="toggleUseCase(ci)" />
+                    <span>{{ item }}</span>
+                  </label>
+                }
+              </div>
+            </div>
+
+            <div class="ent-field">
+              <label class="ent-label">Do you employ a Chief Calculator Officer (CCO)?</label>
+              <div class="ent-options">
+                @for (opt of enterpriseCcoOptions; track opt.label; let oi = $index) {
+                  <button class="ent-option" [class.selected]="enterpriseCco() === oi"
+                          (click)="enterpriseCco.set(oi)">
+                    <span class="ent-opt-label">{{ opt.label }}</span>
+                    <span class="ent-opt-sub">{{ opt.sub }}</span>
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="modal-action modal-action-green" [disabled]="!enterpriseFormValid()" (click)="submitEnterpriseForm()">
+              SUBMIT BOARD RESOLUTION
+            </button>
+          </div>
+        }
+
+        @if (getFlow('enterprise') === 'processing') {
+          <div class="modal-body result-center">
+            <div class="processing-dots"><span></span><span></span><span></span></div>
+            <p class="processing-label">{{ processingLabel() }}</p>
+          </div>
+        }
+
+        @if (getFlow('enterprise') === 'authorized') {
+          <div class="modal-body result-center">
+            <p class="result-title result-elite">ACCESS GRANTED ✦</p>
+            <p class="priority-badge">PRIORITY LANE #{{ enterprisePriority() }}</p>
+            <p class="result-body">Dedicated quantum engineer assigned:</p>
+            <p class="engineer-name">{{ enterpriseEngineer() }}</p>
+            <p class="result-note">{{ enterpriseEngineer() }} will contact you via encrypted neutrino packet within 3–5 business eternities.</p>
+          </div>
+          <div class="modal-footer modal-footer-split">
+            <button class="modal-action modal-action-ghost" (click)="retryEnterprise()">RESTART PROCESS</button>
+            <button class="modal-action modal-action-green" (click)="closeModal()">ACCEPT ELITE STATUS</button>
+          </div>
+        }
+
+      }
+
+    </div>
+  </div>
+}

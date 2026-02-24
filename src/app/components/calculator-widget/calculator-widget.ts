@@ -68,6 +68,8 @@ export class CalculatorWidgetComponent implements OnDestroy {
   // ── Keyboard support ───────────────────────────────────
   @HostListener('window:keydown', ['$event'])
   handleKey(e: KeyboardEvent) {
+    const tag = (e.target as HTMLElement)?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
     if (e.key >= '0' && e.key <= '9') { this.inputDigit(e.key); e.preventDefault(); }
     else if (e.key === '.') { this.inputDigit('.'); e.preventDefault(); }
     else if (e.key === '+') { this.inputOperator('+'); e.preventDefault(); }
