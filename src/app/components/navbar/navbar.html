@@ -1,0 +1,36 @@
+<nav class="navbar">
+  <div class="navbar-shell">
+    <a class="brand" routerLink="/" (click)="closeMenu()">
+      <span class="brand-title">CALCUL8R</span>
+      <span class="brand-status">
+        <i-lucide [img]="icons['sparkles']" [size]="14" />
+        hyper-navigation
+      </span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      [attr.aria-expanded]="mobileOpen()"
+      [attr.aria-label]="mobileOpen() ? 'Close navigation menu' : 'Open navigation menu'"
+      (click)="toggleMenu()"
+    >
+      <span>Menu</span>
+      <i-lucide [img]="mobileOpen() ? icons['close'] : icons['menu']" [size]="18" />
+    </button>
+
+    <div class="nav-links" [class.is-open]="mobileOpen()">
+      @for (item of navItems; track item.path) {
+        <a
+          class="nav-link"
+          [routerLink]="item.path"
+          routerLinkActive="is-active"
+          [routerLinkActiveOptions]="{ exact: isExact(item.path) }"
+          (click)="closeMenu()"
+        >
+          {{ item.label }}
+        </a>
+      }
+    </div>
+  </div>
+</nav>

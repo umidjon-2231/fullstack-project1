@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.section-shell {
+  position: relative;
+  z-index: 1;
+  min-height: calc(100vh - 6rem);
+  padding-top: 7rem;
+}
+
+@media (max-width: 768px) {
+  .section-shell {
+    padding-top: 6rem;
+  }
+}

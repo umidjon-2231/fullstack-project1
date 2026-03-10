@@ -1,0 +1,8 @@
+<app-cursor-glow />
+@if (showConfetti()) { <app-confetti /> }
+
+<div class="section-shell">
+  <app-calculator-widget (confettiTrigger)="onConfettiTrigger()" />
+</div>
+
+<app-site-footer />
