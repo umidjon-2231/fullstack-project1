@@ -1,0 +1,25 @@
+<section class="hello-page">
+  <div class="hello-card">
+    <p class="hello-kicker">Private route</p>
+    <h1 class="hello-title">Greeting Console</h1>
+    <p class="hello-copy">Enter a name and trigger a simple hello message.</p>
+
+    <div class="hello-form">
+      <input
+        type="text"
+        class="hello-input"
+        placeholder="Enter a name"
+        [value]="name()"
+        (input)="updateName($any($event.target).value)"
+        (keydown.enter)="greet()" />
+
+      <button type="button" class="hello-button" [disabled]="!canGreet()" (click)="greet()">
+        Say Hello
+      </button>
+    </div>
+
+    @if (greetedName()) {
+      <p class="hello-result">Hello {{ greetedName() }}</p>
+    }
+  </div>
+</section>
